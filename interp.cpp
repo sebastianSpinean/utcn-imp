@@ -13,6 +13,12 @@ void Interp::Run()
   for (;;) {
     auto op = prog_.Read<Opcode>(pc_);
     switch (op) {
+      case Opcode::PUSH_INT: {
+          auto val = prog_.Read<int64_t>(pc_);
+          Push(val);
+          continue;
+      }
+
       case Opcode::PUSH_FUNC: {
         Push(prog_.Read<size_t>(pc_));
         continue;
@@ -51,6 +57,15 @@ void Interp::Run()
       case Opcode::ADD: {
         auto rhs = PopInt();
         auto lhs = PopInt();
+
+        bool lhs_sign = lhs >> 63;
+        bool rhs_sign = rhs >> 63;
+
+        bool rez_sign = ((uint64_t)lhs + (uint64_t)rhs) >> 63;
+
+        if(lhs_sign == rhs_sign && lhs_sign != rez_sign)
+          throw RuntimeError("add overflow");
+
         Push(lhs + rhs);
         continue;
       }

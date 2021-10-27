@@ -127,9 +127,11 @@ private:
   void LowerBinaryExpr(const Scope &scope, const BinaryExpr &expr);
   /// Lowers a call expression.
   void LowerCallExpr(const Scope &scope, const CallExpr &expr);
-
+  /// Lowers a int expression.
+  void LowerIntExpr(const Scope &scope, const IntExpr &val);
   /// Lowers a function declaration.
   void LowerFuncDecl(const Scope &scope, const FuncDecl &funcDecl);
+  
 
 private:
   /// Create a new label.
