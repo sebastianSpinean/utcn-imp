@@ -157,6 +157,12 @@ private:
   void EmitJumpFalse(Label label);
   /// Emit an unconditional jump.
   void EmitJump(Label label);
+  void EmitDoubleEqual(Label label);
+  void EmitSub();
+  void EmitMUl();
+  void EmitMod();
+  void EmitDiv();
+
 
   /// Emit some bytes of code.
   template<typename T>

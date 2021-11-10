@@ -141,6 +141,12 @@ std::ostream &operator<<(std::ostream &os, const Token::Kind kind)
     case Token::Kind::INT: return os << "INT";
     case Token::Kind::STRING: return os << "STRING";
     case Token::Kind::IDENT: return os << "IDENT";
+    case Token::Kind::MULTIPLY: return os << "*";
+     case Token::Kind::DOUBLEEQ: return os << "==";
+     case Token::Kind::MINUS: return os << "-";
+     case Token::Kind::MODULO: return os << "%";
+     case Token::Kind::DIVISION: return os << "/";
+  
   }
   return os;
 }
@@ -196,9 +202,20 @@ const Token &Lexer::Next()
     case '}': return NextChar(), tk_ = Token::RBrace(loc);
     case ':': return NextChar(), tk_ = Token::Colon(loc);
     case ';': return NextChar(), tk_ = Token::Semi(loc);
-    case '=': return NextChar(), tk_ = Token::Equal(loc);
+    //case '=': return NextChar(), tk_ = Token::Equal(loc);
     case '+': return NextChar(), tk_ = Token::Plus(loc);
     case ',': return NextChar(), tk_ = Token::Comma(loc);
+    case '*': return NextChar(), tk_ = Token::Multiply(loc);
+    case "-": return NextChar(), tk_ = Token::Minus(loc);
+    case "%": return NextChar(), tk_ = Token::Modulo(loc);
+    case "/": return NextChar(), tk_ = Token::Division(loc);
+    case '=': {
+      NextChar();
+      if(chr_ == '=')
+        return NextChar(), tk_ = Token::DoubleEqual(loc);
+      else 
+        return tk_ = Token::Equal(loc);
+    }
     case '"': {
       std::string word;
       NextChar();

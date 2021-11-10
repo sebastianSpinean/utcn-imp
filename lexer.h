@@ -43,10 +43,16 @@ public:
     LBRACE,
     RBRACE,
     COLON,
+    MULTIPLY,
+    DIVISION,
+    MODULO,
     SEMI,
     EQUAL,
     COMMA,
     PLUS,
+    DOUBLEEQ,
+    DIFFERENT,
+    MINUS,
     // Complex tokens.
     INT,
     STRING,
@@ -113,6 +119,12 @@ public:
   static Token While(const Location &l) { return Token(l, Kind::WHILE); }
   static Token Ident(const Location &l, const std::string &str);
   static Token String(const Location &l, const std::string &str);
+  static Token Multiply(const Location &l) { return Token(l, Kind::MULTIPLY);}
+  static Token DoubleEqual(const Location &l) { return Token(l, Kind::DOUBLEEQ);}
+  static Token Minus(const Location &l) { return Token(l, Kind::MINUS); }
+  static Token Modulo(const Location &l) { return Token(l, Kind::MODULO);}
+  static Token Division(const Location &l) { return Token(l, Kind::DIVISION);}
+   static Token Different(const Location &l) { return Token(l, Kind::DIFFERENT);}
 
 
   /// PROBLEM 2

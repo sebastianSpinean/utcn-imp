@@ -69,6 +69,45 @@ void Interp::Run()
         Push(lhs + rhs);
         continue;
       }
+      case Opcode::SUB: {
+         auto rhs = PopInt();
+        auto lhs = PopInt();
+
+        bool lhs_sign = lhs >> 63;
+        bool rhs_sign = rhs >> 63;
+
+        bool rez_sign = ((uint64_t)lhs - (uint64_t)rhs) >> 63;
+
+        if(lhs_sign == rhs_sign && lhs_sign != rez_sign)
+          throw RuntimeError("add overflow");
+
+        Push(lhs - rhs);
+        continue;
+      }
+      case Opcode::MUL: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(lhs * rhs);
+        continue;
+      }
+      case Opcode::MOD: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(lhs % rhs);
+        continue;
+      }
+      case Opcode::DIV: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(lhs / rhs);
+        continue;
+      }
+      case Opcode::DOUBLEEQ: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push((int64_t) (lhs == rhs));
+        continue;
+      }
       case Opcode::RET: {
         auto depth = prog_.Read<unsigned>(pc_);
         auto nargs = prog_.Read<unsigned>(pc_);
