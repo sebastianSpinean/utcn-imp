@@ -119,6 +119,8 @@ private:
   /// Lowers a standalone expression statement.
   void LowerExprStmt(const Scope &scope, const ExprStmt &exprStmt);
 
+  void LowerIfStmt(const Scope &scope, const IfStmt &ifStmt);
+
   /// Lowers a single expression.
   void LowerExpr(const Scope &scope, const Expr &expr);
   /// Lowers a reference to an identifier.
@@ -157,11 +159,12 @@ private:
   void EmitJumpFalse(Label label);
   /// Emit an unconditional jump.
   void EmitJump(Label label);
-  void EmitDoubleEqual(Label label);
+  void EmitDoubleEqual();
   void EmitSub();
-  void EmitMUl();
+  void EmitMul();
   void EmitMod();
   void EmitDiv();
+  void EmitDifferent();
 
 
   /// Emit some bytes of code.

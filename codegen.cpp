@@ -120,6 +120,9 @@ void Codegen::LowerStmt(const Scope &scope, const Stmt &stmt)
     case Stmt::Kind::RETURN: {
       return LowerReturnStmt(scope, static_cast<const ReturnStmt &>(stmt));
     }
+    case Stmt::Kind::IF: {
+      return LowerIfStmt(scope, static_cast<const IfStmt &>(stmt));
+    }
   }
 }
 
@@ -147,6 +150,26 @@ void Codegen::LowerWhileStmt(const Scope &scope, const WhileStmt &whileStmt)
   EmitJumpFalse(exit);
   LowerStmt(scope, whileStmt.GetStmt());
   EmitJump(entry);
+  EmitLabel(exit);
+}
+
+void Codegen::LowerIfStmt(const Scope &scope, const IfStmt &ifStmt)
+{
+  //auto entry = MakeLabel();
+  auto exit = MakeLabel();
+  auto elselabel = MakeLabel();
+
+  //EmitLabel(entry);
+  LowerExpr(scope, ifStmt.GetCond());
+  EmitJumpFalse(elselabel);
+  LowerStmt(scope, ifStmt.GetStmt());
+  EmitJump(exit);
+  EmitLabel(elselabel);
+  if(ifStmt.GetElseStmt() != nullptr){
+      LowerStmt(scope, *ifStmt.GetElseStmt().get());
+
+
+  }
   EmitLabel(exit);
 }
 
@@ -221,8 +244,14 @@ void Codegen::LowerBinaryExpr(const Scope &scope, const BinaryExpr &binary)
     case BinaryExpr::Kind::MUL: {
       return EmitMul();
     }
+    case BinaryExpr::Kind::DIV: {
+      return EmitDiv();
+    }
     case BinaryExpr::Kind::MOD: {
       return EmitMod();
+    }
+    case BinaryExpr::Kind::DIFFERENT: {
+      return EmitDifferent();
     }
 
   }
@@ -381,8 +410,10 @@ void Codegen::EmitJump(Label label)
   EmitFixup(label);
 }
 
-void Codgegen::EmitDoubleEqual()
+void Codegen::EmitDoubleEqual()
 {
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
   Emit<Opcode>(Opcode::DOUBLEEQ);
 }
 
@@ -412,5 +443,12 @@ void Codegen::EmitDiv()
   assert(depth_ > 0 && "no elements on stack");
   depth_ -= 1;
   Emit<Opcode>(Opcode::DIV);
+}
+
+void Codegen::EmitDifferent()
+{
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
+  Emit<Opcode>(Opcode::DIFFERENT);
 }
 

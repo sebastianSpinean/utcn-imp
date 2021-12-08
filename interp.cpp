@@ -108,6 +108,12 @@ void Interp::Run()
         Push((int64_t) (lhs == rhs));
         continue;
       }
+      case Opcode::DIFFERENT: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push((int64_t) (lhs != rhs));
+        continue;
+      }
       case Opcode::RET: {
         auto depth = prog_.Read<unsigned>(pc_);
         auto nargs = prog_.Read<unsigned>(pc_);

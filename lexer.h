@@ -37,6 +37,8 @@ public:
     FUNC,
     RETURN,
     WHILE,
+    IF,
+    ELSE,
     // Symbols.
     LPAREN,
     RPAREN,
@@ -125,6 +127,9 @@ public:
   static Token Modulo(const Location &l) { return Token(l, Kind::MODULO);}
   static Token Division(const Location &l) { return Token(l, Kind::DIVISION);}
    static Token Different(const Location &l) { return Token(l, Kind::DIFFERENT);}
+   static Token If(const Location &l) {return Token(l, Kind::IF);}
+   static Token Else(const Location &l) {return Token(l, Kind::ELSE);}
+   
 
 
   /// PROBLEM 2

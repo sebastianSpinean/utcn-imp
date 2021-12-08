@@ -146,6 +146,9 @@ std::ostream &operator<<(std::ostream &os, const Token::Kind kind)
      case Token::Kind::MINUS: return os << "-";
      case Token::Kind::MODULO: return os << "%";
      case Token::Kind::DIVISION: return os << "/";
+     case Token::Kind::DIFFERENT: return os << "!=";
+     case Token::Kind::IF: return os << "if";
+     case Token::Kind::ELSE: return os << "else";
   
   }
   return os;
@@ -206,15 +209,23 @@ const Token &Lexer::Next()
     case '+': return NextChar(), tk_ = Token::Plus(loc);
     case ',': return NextChar(), tk_ = Token::Comma(loc);
     case '*': return NextChar(), tk_ = Token::Multiply(loc);
-    case "-": return NextChar(), tk_ = Token::Minus(loc);
-    case "%": return NextChar(), tk_ = Token::Modulo(loc);
-    case "/": return NextChar(), tk_ = Token::Division(loc);
+    case '-': return NextChar(), tk_ = Token::Minus(loc);
+    case '%': return NextChar(), tk_ = Token::Modulo(loc);
+    case '/': return NextChar(), tk_ = Token::Division(loc);
     case '=': {
       NextChar();
       if(chr_ == '=')
         return NextChar(), tk_ = Token::DoubleEqual(loc);
       else 
         return tk_ = Token::Equal(loc);
+    }
+    case '!': {
+      NextChar();
+      if(chr_ == '='){
+        return NextChar(), tk_ = Token::Different(loc);
+      } else {
+         Error("invalid !");
+      }
     }
     case '"': {
       std::string word;
@@ -239,6 +250,8 @@ const Token &Lexer::Next()
         if (word == "func") return tk_ = Token::Func(loc);
         if (word == "return") return tk_ = Token::Return(loc);
         if (word == "while") return tk_ = Token::While(loc);
+        if (word == "if") return tk_ = Token::If(loc);
+        if (word == "else") return tk_ = Token::Else(loc);
         return tk_ = Token::Ident(loc, word);
       } else {
         if(isdigit(chr_)) {

@@ -22,7 +22,9 @@ public:
     BLOCK,
     WHILE,
     EXPR,
-    RETURN
+    RETURN,
+    IF,
+    ELSE
   };
 
 public:
@@ -234,6 +236,30 @@ private:
   std::shared_ptr<Expr> cond_;
   /// Expression to be executed in the loop body.
   std::shared_ptr<Stmt> stmt_;
+};
+
+class IfStmt final : public Stmt {
+public:
+  IfStmt(std::shared_ptr<Expr> cond, std::shared_ptr<Stmt> stmt, std::shared_ptr<Stmt> elseStmt = nullptr)
+    : Stmt(Kind::IF)
+    , cond_(cond)
+    , stmt_(stmt)
+    , elseStmt_(elseStmt)
+  
+  {
+  } 
+
+  const Expr &GetCond() const { return *cond_; }
+  const Stmt &GetStmt() const { return *stmt_; }
+  std::shared_ptr<Stmt> GetElseStmt() const {return elseStmt_;}
+
+private:
+  /// Condition for the loop.
+  std::shared_ptr<Expr> cond_;
+  /// Expression to be executed in the loop body.
+  std::shared_ptr<Stmt> stmt_;
+  std::shared_ptr<Stmt> elseStmt_;
+
 };
 
 /**
